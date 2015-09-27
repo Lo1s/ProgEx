@@ -1,11 +1,12 @@
 package com.knabria.jiris.progex;
 
+import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class TransactionsActivity extends AppCompatActivity {
+public class TransactionsActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
