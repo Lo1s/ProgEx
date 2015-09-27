@@ -1,25 +1,23 @@
 package com.knabria.jiris.progex;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
-public class TransactionsActivity extends Activity {
+public class DetailTransactionActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_transactions);
+        setContentView(R.layout.activity_detail_transaction);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_transactions, menu);
+        getMenuInflater().inflate(R.menu.menu_detail_transaction, menu);
         return true;
     }
 
@@ -36,11 +34,5 @@ public class TransactionsActivity extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    // Starts the activity for detailed transaction information
-    // TODO: Change it to fragments for better UI on tablet
-    public void startsDetailTransactionActivity(View view) {
-        startActivity(new Intent(this, DetailTransactionActivity.class));
     }
 }

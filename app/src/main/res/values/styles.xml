@@ -14,12 +14,17 @@
 
     <style name="CardView_Font.TitleAmount" parent="CardView_Font">
         <item name="android:textStyle">bold</item>
-        <item name="android:textSize">15sp</item>
+        <item name="android:textSize">19sp</item>
     </style>
 
     <style name="CardView_Font.TransactionType" parent="CardView_Font">
         <item name="android:textStyle">italic</item>
-        <item name="android:textSize">10sp</item>
+        <item name="android:textSize">12sp</item>
     </style>
+
+    <style name="CardView_Font.TransactionDetail" parent="CardView_Font">
+        <item name="android:textSize">17sp</item>
+    </style>
+
 
 </resources>
