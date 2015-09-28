@@ -69,23 +69,50 @@ public class TransactionsActivity extends AppCompatActivity {
 
             @Override
             public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
-
             }
 
             @Override
             public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
-
             }
         };
 
-        actionBar.addTab(actionBar.newTab().setText(MyConstants.FILTER_ALL)
+        actionBar.addTab(actionBar.newTab().setText(R.string.all_transactions)
                 .setTabListener(tabListener));
-        actionBar.addTab(actionBar.newTab().setText(MyConstants.FILTER_INCOMING)
+        actionBar.addTab(actionBar.newTab().setText(R.string.incoming_transaction)
                 .setTabListener(tabListener));
-        actionBar.addTab(actionBar.newTab().setText(MyConstants.FILTER_OUTGOING)
+        actionBar.addTab(actionBar.newTab().setText(R.string.outgoing_transaction)
                 .setTabListener(tabListener));
+    }
 
+    /** Helper methods for creating UI which consists from CardViews */
+    private synchronized void createCardView(Transaction transaction) {
+        // For localization purposes get string from resources
+        String directionFromResources =
+                (transaction.getDirection().equals(MyConstants.FILTER_INCOMING)) ?
+                        getResources().getString(R.string.incoming_transaction) :
+                        getResources().getString(R.string.outgoing_transaction);
 
+        CardView cardView = new CardView(new ContextThemeWrapper(TransactionsActivity.this,
+                R.style.CardViewStyle), null, 0);
+
+        RelativeLayout cardInner = new RelativeLayout(new ContextThemeWrapper(
+                TransactionsActivity.this, R.style.CardViewContentStyle));
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        int margin = 10;
+        params.setMargins(margin, margin, margin, margin);
+        cardView.setLayoutParams(params);
+
+        cardInner.addView(createImageView(transaction.getDirection()));
+        cardInner.addView(createTextViewLayout(transaction.getAmountInAccountCurrency(),
+                directionFromResources));
+        cardInner.addView(createImageButton(transaction.getId()));
+
+        cardView.addView(cardInner);
+        llContainer.addView(cardView);
     }
 
     private synchronized ImageView createImageView(String direction) {
@@ -134,9 +161,12 @@ public class TransactionsActivity extends AppCompatActivity {
     private synchronized ImageButton createImageButton(int id) {
         ImageButton imageButtonDetail = new ImageButton(new ContextThemeWrapper(
                 TransactionsActivity.this, R.style.ImageButtonStyle));
+
         imageButtonDetail.setImageResource(R.drawable.ic_keyboard_arrow_right_black_36dp);
+
         RelativeLayout.LayoutParams imageButtonParams = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
         imageButtonParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         imageButtonDetail.setLayoutParams(imageButtonParams);
         imageButtonDetail.setBackgroundColor(getResources().getColor(android.R.color.transparent));
@@ -144,6 +174,8 @@ public class TransactionsActivity extends AppCompatActivity {
         final Intent detailActivityIntent = new Intent(TransactionsActivity.this,
                 DetailTransactionActivity.class);
         detailActivityIntent.putExtra(MyConstants.TRANSACTION_OBJECT, transactionList.get(id - 1));
+
+        // Register listener
         imageButtonDetail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -152,27 +184,6 @@ public class TransactionsActivity extends AppCompatActivity {
         });
 
         return imageButtonDetail;
-    }
-
-    private synchronized void createCardView(int id, double amount, String direction) {
-        CardView cardView = new CardView(new ContextThemeWrapper(TransactionsActivity.this,
-                R.style.CardViewStyle), null, 0);
-        RelativeLayout cardInner = new RelativeLayout(new ContextThemeWrapper(
-                TransactionsActivity.this, R.style.CardViewContentStyle));
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        int margin = 10;
-        params.setMargins(margin, margin, margin, margin);
-        cardView.setLayoutParams(params);
-
-        cardInner.addView(createImageView(direction));
-        cardInner.addView(createTextViewLayout(amount, direction));
-        cardInner.addView(createImageButton(id));
-
-        cardView.addView(cardInner);
-        //cardView.setId(cardViewId);
-        llContainer.addView(cardView);
     }
 
     // Checks for internet connectivity
@@ -248,25 +259,21 @@ public class TransactionsActivity extends AppCompatActivity {
             if (transactionList != null) {
                 for (int i = 0; i < transactionList.size(); i++) {
                     transaction = transactionList.get(i);
-                    if (selectedTab.equals("ALL")) {
+                    if (selectedTab.equals(getResources().getString(R.string.all_transactions))) {
                         Log.i("id: " + transaction.getId(),
                                 "Amount: " + transaction.getAmountInAccountCurrency()
                                         + ", Direction: " + transaction.getDirection());
-                        createCardView(transaction.getId(),
-                                transaction.getAmountInAccountCurrency(),
-                                transaction.getDirection());
+                        createCardView(transaction);
 
-                    } else if (selectedTab.equals(MyConstants.FILTER_INCOMING)
+                    } else if (selectedTab.equals(getResources()
+                            .getString(R.string.incoming_transaction))
                             && transaction.getDirection().equals(MyConstants.FILTER_INCOMING)) {
-                        createCardView(transaction.getId(),
-                                transaction.getAmountInAccountCurrency(),
-                                transaction.getDirection());
+                        createCardView(transaction);
 
-                    } else if (selectedTab.equals(MyConstants.FILTER_OUTGOING)
+                    } else if (selectedTab.equals(getResources()
+                            .getString(R.string.outgoing_transaction))
                             && transaction.getDirection().equals(MyConstants.FILTER_OUTGOING)) {
-                        createCardView(transaction.getId(),
-                                transaction.getAmountInAccountCurrency(),
-                                transaction.getDirection());
+                        createCardView(transaction);
                     }
                 }
             } else {

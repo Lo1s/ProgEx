@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ProgEx</string>
+    <string name="account_name">Název účtu</string>
+    <string name="account_number">Číslo účtu</string>
+    <string name="action_settings">Nastavení</string>
+    <string name="bank_code">Bankovní kód</string>
+    <string name="incoming_transaction">Příchozí</string>
+    <string name="outgoing_transaction">Odchozí</string>
+    <string name="title_activity_detail_transaction"></string>
+    <string name="transaction_detail">Detail transakce</string>
+    <string name="transaction_list">Přehled transakcí</string>
+    <string name="all_transactions">Všechny </string>
+</resources>
