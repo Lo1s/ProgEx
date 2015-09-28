@@ -1,11 +1,13 @@
 package com.knabria.jiris.progex;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.CardView;
 import android.util.Log;
@@ -18,41 +20,68 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class TransactionsActivity extends Activity {
+public class TransactionsActivity extends AppCompatActivity {
 
     private static final String TAG = "TransactionsActivity";
-    public static final String TRANSACTION = "transactionObject";
     private final String URL_ALL_TRANSACTIONS = "http://demo0569565.mockable.io/transactions";
-    public static String currency = " CZK";
+    private String selectedTab = MyConstants.FILTER_ALL;
 
-    private int transactionId;
-
-    private ImageView imageView_transactionType;
-    private TextView textView_amount;
-    private TextView textView_transferType;
     private LinearLayout llContainer;
+    private ActionBar actionBar;
 
     private FetchTransactionsTask fetchTransactionsTask;
     private List<Transaction> transactionList;
+    private Transaction transaction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transactions);
         llContainer = (LinearLayout) findViewById(R.id.linearlayout_container);
-        // Initialize the UI components
-        // TODO: clean
-        // imageView_transactionType = (ImageView) findViewById(R.id.imageview_transactiontype);
-        //textView_amount = (TextView) findViewById(R.id.textview_amount);
-        //textView_transferType = (TextView) findViewById(R.id.textview_transfertype);
+        actionBar = getSupportActionBar();
+        initializeTabs();
 
-        // Begin the REST transfer in the background thread via AsyncTask
-        // for parallel processing use executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params)
-        // - not necessary in this example
-        requestData(URL_ALL_TRANSACTIONS);
+    }
+
+    private void initializeTabs() {
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        actionBar.setTitle(getResources().getString(R.string.transaction_list));
+
+        ActionBar.TabListener tabListener = new ActionBar.TabListener() {
+            @Override
+            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+                if (llContainer.getChildCount() > 0) {
+                    llContainer.removeAllViews();
+                }
+
+                selectedTab = tab.getText().toString();
+                // Begin the REST transfer in the background thread via AsyncTask
+                // for parallel processing use executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params)
+                // - not necessary in this example
+                requestData(URL_ALL_TRANSACTIONS);
+            }
+
+            @Override
+            public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
+
+            }
+
+            @Override
+            public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+
+            }
+        };
+
+        actionBar.addTab(actionBar.newTab().setText(MyConstants.FILTER_ALL)
+                .setTabListener(tabListener));
+        actionBar.addTab(actionBar.newTab().setText(MyConstants.FILTER_INCOMING)
+                .setTabListener(tabListener));
+        actionBar.addTab(actionBar.newTab().setText(MyConstants.FILTER_OUTGOING)
+                .setTabListener(tabListener));
+
+
     }
 
     private synchronized ImageView createImageView(String direction) {
@@ -60,9 +89,9 @@ public class TransactionsActivity extends Activity {
                 TransactionsActivity.this, R.style.ImageViewStyle));
         imageViewTransacTionType.setId(R.id.imageview_transactiontype);
 
-        if (direction.equals("OUTGOING")) {
+        if (direction.equals(MyConstants.FILTER_OUTGOING)) {
             imageViewTransacTionType.setImageResource(R.drawable.ic_arrow_back_black_36dp);
-        } else if (direction.equals("INCOMING")) {
+        } else if (direction.equals(MyConstants.FILTER_INCOMING)) {
             imageViewTransacTionType.setImageResource(R.drawable.ic_arrow_forward_black_36dp);
         } else {
             Toast.makeText(TransactionsActivity.this, "Loading icon failed",
@@ -82,8 +111,8 @@ public class TransactionsActivity extends Activity {
         paramsTextViews.addRule(RelativeLayout.RIGHT_OF, R.id.imageview_transactiontype);
         linearLayoutTextViews.setLayoutParams(paramsTextViews);
 
-        linearLayoutTextViews.addView(createTextView(String.format("%.2f", amount) + currency,
-                R.style.TextViewAmountStyle));
+        linearLayoutTextViews.addView(createTextView(String.format("%.2f", amount)
+                        + MyConstants.currency, R.style.TextViewAmountStyle));
         linearLayoutTextViews.addView(createTextView(direction,
                 R.style.TextViewTransferTypeStyle));
 
@@ -110,7 +139,7 @@ public class TransactionsActivity extends Activity {
 
         final Intent detailActivityIntent = new Intent(TransactionsActivity.this,
                 DetailTransactionActivity.class);
-        detailActivityIntent.putExtra(TRANSACTION, transactionList.get(id - 1));
+        detailActivityIntent.putExtra(MyConstants.TRANSACTION_OBJECT, transactionList.get(id - 1));
         imageButtonDetail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -187,12 +216,27 @@ public class TransactionsActivity extends Activity {
 
             if (transactionList != null) {
                 for (int i = 0; i < transactionList.size(); i++) {
-                    Log.i("id: " + transactionList.get(i).getId(),
-                            "Amount: " + transactionList.get(i).getAmountInAccountCurrency()
-                            + ", Direction: " + transactionList.get(i).getDirection());
-                    createCardView(transactionList.get(i).getId(),
-                            transactionList.get(i).getAmountInAccountCurrency(),
-                            transactionList.get(i).getDirection());
+                    transaction = transactionList.get(i);
+                    if (selectedTab.equals("ALL")) {
+                        Log.i("id: " + transaction.getId(),
+                                "Amount: " + transaction.getAmountInAccountCurrency()
+                                        + ", Direction: " + transaction.getDirection());
+                        createCardView(transaction.getId(),
+                                transaction.getAmountInAccountCurrency(),
+                                transaction.getDirection());
+
+                    } else if (selectedTab.equals(MyConstants.FILTER_INCOMING)
+                            && transaction.getDirection().equals(MyConstants.FILTER_INCOMING)) {
+                        createCardView(transaction.getId(),
+                                transaction.getAmountInAccountCurrency(),
+                                transaction.getDirection());
+
+                    } else if (selectedTab.equals(MyConstants.FILTER_OUTGOING)
+                            && transaction.getDirection().equals(MyConstants.FILTER_OUTGOING)) {
+                        createCardView(transaction.getId(),
+                                transaction.getAmountInAccountCurrency(),
+                                transaction.getDirection());
+                    }
                 }
             } else {
                 Log.i(TAG, "Transaction list is null");
@@ -200,9 +244,6 @@ public class TransactionsActivity extends Activity {
         }
     }
 
-    // Starts the activity for detailed transaction information
     // TODO: Change it to fragments for better UI on tablet
-    public void startsDetailTransactionActivity(View view) {
 
-    }
 }

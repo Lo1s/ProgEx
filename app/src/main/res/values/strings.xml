@@ -5,4 +5,6 @@
     <string name="title_activity_detail_transaction">DetailTransactionActivity</string>
     <string name="outgoing_transaction">OUTGOING</string>
     <string name="incoming_transaction">INCOMING</string>
+    <string name="transaction_list">Transaction List</string>
+    <string name="transaction_detail">Transaction Detail</string>
 </resources>

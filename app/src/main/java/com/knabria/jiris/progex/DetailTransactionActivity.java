@@ -2,6 +2,7 @@ package com.knabria.jiris.progex;
 
 import android.app.Activity;
 import android.os.AsyncTask;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -14,7 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class DetailTransactionActivity extends Activity {
+public class DetailTransactionActivity extends AppCompatActivity {
 
     private static final String TAG = "DetailTransaction";
     private int transactionId;
@@ -23,6 +24,7 @@ public class DetailTransactionActivity extends Activity {
     private ContraAccount contraAccount;
     private Transaction transaction;
     private ProgressBar progressBar;
+    private ActionBar actionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,9 +33,13 @@ public class DetailTransactionActivity extends Activity {
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);
 
+        actionBar = getSupportActionBar();
+        actionBar.setTitle(getResources().getString(R.string.transaction_detail));
+
+
         // Get the passed object (Transaction), update the header data from it and send the request
         // for contra account values
-        transaction = getIntent().getParcelableExtra(TransactionsActivity.TRANSACTION);
+        transaction = getIntent().getParcelableExtra(MyConstants.TRANSACTION_OBJECT);
         transactionId = transaction.getId();
         requestData(URL_TRANSACTION_DETAIL + transactionId);
         updateHeader();
@@ -47,17 +53,17 @@ public class DetailTransactionActivity extends Activity {
             TextView textViewDirection = (TextView) findViewById(R.id.textview_transfer_type_detail);
 
             // Set direction icon and text
-            if (transaction.getDirection().equals("OUTGOING")) {
+            if (transaction.getDirection().equals(MyConstants.FILTER_OUTGOING)) {
                 imageViewDirection.setImageResource(R.drawable.ic_arrow_back_black_36dp);
                 textViewDirection.setText(R.string.outgoing_transaction);
-            } else if (transaction.getDirection().equals("INCOMING")) {
+            } else if (transaction.getDirection().equals(MyConstants.FILTER_INCOMING)) {
                 imageViewDirection.setImageResource(R.drawable.ic_arrow_forward_black_36dp);
                 textViewDirection.setText(R.string.incoming_transaction);
             }
 
             // Set transaction amount (with dummy currency)
             textViewAmount.setText(transaction.getAmountInAccountCurrency()
-                    + TransactionsActivity.currency);
+                    + MyConstants.currency);
         } else {
             Log.d("updateHeader()", "Transaction is Null");
         }
