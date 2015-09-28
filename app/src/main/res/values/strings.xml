@@ -7,4 +7,7 @@
     <string name="incoming_transaction">INCOMING</string>
     <string name="transaction_list">Transaction List</string>
     <string name="transaction_detail">Transaction Detail</string>
+    <string name="account_number">Account Number:</string>
+    <string name="account_name">Account Name:</string>
+    <string name="bank_code">Bank Code:</string>
 </resources>

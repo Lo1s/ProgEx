@@ -74,32 +74,29 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
-                        <!-- TODO: Fix the hardcoded text -->
                         <TextView
                             android:id="@+id/textview_accountnumber_detail"
                             style="@style/CardView_Font.TransactionDetail"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingTop="5dp"
-                            android:text="Account Number: " />
+                            android:text="@string/account_number" />
 
-                        <!-- TODO: Fix the hardcoded text -->
                         <TextView
                             android:id="@+id/textview_accountname_detail"
                             style="@style/CardView_Font.TransactionDetail"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingTop="5dp"
-                            android:text="Account Name: " />
+                            android:text="@string/account_name" />
 
-                        <!-- TODO: Fix the hardcoded text -->
                         <TextView
                             android:id="@+id/textview_bankcode_detail"
                             style="@style/CardView_Font.TransactionDetail"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingTop="5dp"
-                            android:text="Bank Code: " />
+                            android:text="@string/bank_code" />
 
 
                     </LinearLayout>

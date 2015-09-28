@@ -1,12 +1,15 @@
 package com.knabria.jiris.progex;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.CardView;
@@ -61,6 +64,7 @@ public class TransactionsActivity extends AppCompatActivity {
                 // for parallel processing use executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params)
                 // - not necessary in this example
                 requestData(URL_ALL_TRANSACTIONS);
+
             }
 
             @Override
@@ -112,7 +116,7 @@ public class TransactionsActivity extends AppCompatActivity {
         linearLayoutTextViews.setLayoutParams(paramsTextViews);
 
         linearLayoutTextViews.addView(createTextView(String.format("%.2f", amount)
-                        + MyConstants.currency, R.style.TextViewAmountStyle));
+                + MyConstants.currency, R.style.TextViewAmountStyle));
         linearLayoutTextViews.addView(createTextView(direction,
                 R.style.TextViewTransferTypeStyle));
 
@@ -176,7 +180,7 @@ public class TransactionsActivity extends AppCompatActivity {
         ConnectivityManager connectMgr =
                 (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = connectMgr.getActiveNetworkInfo();
-        if (netInfo != null &&  netInfo.isConnectedOrConnecting()) {
+        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
             return true;
         } else {
             return false;
@@ -191,7 +195,34 @@ public class TransactionsActivity extends AppCompatActivity {
             // TODO: Consider making shortcut for enabling Wi-Fi
             Toast.makeText(TransactionsActivity.this, "Device not connected",
                     Toast.LENGTH_SHORT).show();
+            askUserToTurnWifiOn();
         }
+    }
+
+    private void askUserToTurnWifiOn() {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        final WifiManager wifiMgr = (WifiManager) getSystemService(WIFI_SERVICE);
+
+        dialogBuilder.setTitle("Wi-Fi Settings");
+
+        dialogBuilder
+                .setMessage("Enable Wi-Fi?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        wifiMgr.setWifiEnabled(true);
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        wifiMgr.setWifiEnabled(false);
+                    }
+                })
+                .setCancelable(false);
+
+        AlertDialog alertDialog = dialogBuilder.create();
+        alertDialog.show();
     }
 
     // Fetching list of transactions in JSON from http://demo0569565.mockable.io/transactions
