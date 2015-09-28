@@ -7,6 +7,7 @@
 
     <!-- CardView font style -->
     <!-- TODO: Check the API diff for fontFamily -->
+    <!-- TODO: delete after testing (check detail activity) -->
     <style name="CardView_Font" parent="TextAppearance.AppCompat.Medium">
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textColor">@android:color/black</item>
@@ -24,6 +25,64 @@
 
     <style name="CardView_Font.TransactionDetail" parent="CardView_Font">
         <item name="android:textSize">17sp</item>
+    </style>
+
+    <style name="CardViewStyle" parent="CardView">
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">80dp</item>
+        <item name="cardCornerRadius">5dp</item>
+        <item name="elevation">10dp</item>
+    </style>
+
+    <style name="CardViewContentStyle">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:padding">16dp</item>
+        <item name="android:background">@android:color/holo_green_light</item>
+    </style>
+
+    <style name="ImageViewStyle">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_centerVertical">true</item>
+    </style>
+
+    <style name="LinearLayoutForTextViewsStyle">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:paddingLeft">20dp</item>
+        <item name="android:background">@android:color/holo_green_light</item>
+    </style>
+
+    <style name="TextViewAmountStyle">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_marginTop">3dp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">19sp</item>
+    </style>
+
+    <style name="TextViewTransferTypeStyle">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textStyle">italic</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="ImageButtonStyle">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_marginTop">6dp</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:background">@android:color/transparent</item>
     </style>
 
 

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="transaction_card_view" type="id" />
+    <item name="imageview_transactiontype" type="id" />
+    <item name="textview_amount" type="id" />
+    <item name="textview_transfertype" type="id" />
+    <item name="imagebutton_detail" type="id" />
+
+</resources>

@@ -7,7 +7,7 @@
     tools:context="com.knabria.jiris.progex.DetailTransactionActivity">
 
     <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/transaction_card_view"
+        android:id="@+id/transaction_card_view_detail"
         android:layout_width="match_parent"
         android:layout_height="180dp"
         android:layout_gravity="center"
@@ -20,40 +20,32 @@
             android:background="@android:color/holo_green_light"
             android:padding="16dp">
 
-            <!-- TODO: Fix the hardcoded icon -->
             <ImageView
-                android:id="@+id/imageview_transactiontype"
+                android:id="@+id/imageview_transaction_type_detail"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                android:src="@drawable/ic_arrow_back_black_36dp" />
+                android:layout_height="wrap_content" />
 
             <LinearLayout
-                android:id="@+id/linearlayout_transactioninfo"
+                android:id="@+id/linearlayout_transaction_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
-                android:layout_toRightOf="@id/imageview_transactiontype"
-
+                android:layout_toRightOf="@id/imageview_transaction_type_detail"
                 android:orientation="vertical">
 
-                <!-- TODO: Fix the hardcoded amount -->
                 <TextView
-                    android:id="@+id/textview_amount"
+                    android:id="@+id/textview_amount_detail"
                     style="@style/CardView_Font.TitleAmount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:text="1337 Kč" />
+                    android:layout_marginTop="3dp" />
 
-                <!-- TODO: Fix the hardcoded amount -->
                 <TextView
-                    android:id="@+id/textview_transfertype"
+                    android:id="@+id/textview_transfer_type_detail"
                     style="@style/CardView_Font.TransactionType"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/textview_amount"
-                    android:text="Outgoing" />
+                    android:layout_below="@id/textview_amount_detail" />
 
             </LinearLayout>
 
@@ -62,8 +54,8 @@
                 android:id="@+id/linearlayout_transactiondetailinfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@id/linearlayout_transactioninfo"
-                android:layout_below="@id/linearlayout_transactioninfo"
+                android:layout_alignLeft="@id/linearlayout_transaction_info"
+                android:layout_below="@id/linearlayout_transaction_info"
                 android:layout_marginTop="10dp"
                 android:orientation="vertical">
 
@@ -84,7 +76,7 @@
 
                         <!-- TODO: Fix the hardcoded text -->
                         <TextView
-                            android:id="@+id/textview_accountnumber"
+                            android:id="@+id/textview_accountnumber_detail"
                             style="@style/CardView_Font.TransactionDetail"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -93,7 +85,7 @@
 
                         <!-- TODO: Fix the hardcoded text -->
                         <TextView
-                            android:id="@+id/textview_accountname"
+                            android:id="@+id/textview_accountname_detail"
                             style="@style/CardView_Font.TransactionDetail"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -102,7 +94,7 @@
 
                         <!-- TODO: Fix the hardcoded text -->
                         <TextView
-                            android:id="@+id/textview_bankcode"
+                            android:id="@+id/textview_bankcode_detail"
                             style="@style/CardView_Font.TransactionDetail"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -112,41 +104,49 @@
 
                     </LinearLayout>
 
-                    <LinearLayout
+                    <FrameLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="80dp"
-                        android:orientation="vertical">
+                        >
 
-                        <!-- TODO: Reconsider hardcoded dimmensions -->
-                        <!-- TODO: Fix the hardcoded text -->
-                        <TextView
-                            android:id="@+id/textview_accountnumber_value"
-                            style="@style/CardView_Font.TransactionDetail"
+                        <ProgressBar
+                            android:id="@+id/progressBar"
+                            style="?android:progressBarStyleInverse"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:paddingTop="5dp"
-                            android:text="111" />
+                            android:layout_gravity="center"/>
 
-                        <!-- TODO: Fix the hardcoded text -->
-                        <TextView
-                            android:id="@+id/textview_accountname_value"
-                            style="@style/CardView_Font.TransactionDetail"
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:paddingTop="5dp"
-                            android:text="BU" />
+                            android:orientation="vertical">
 
-                        <!-- TODO: Fix the hardcoded text -->
-                        <TextView
-                            android:id="@+id/textview_bankcode_value"
-                            style="@style/CardView_Font.TransactionDetail"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingTop="5dp"
-                            android:text="3030" />
+                            <!-- TODO: Reconsider hardcoded dimmensions -->
+                            <TextView
+                                android:id="@+id/textview_accountnumber_value"
+                                style="@style/CardView_Font.TransactionDetail"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingTop="5dp" />
 
-                    </LinearLayout>
+                            <TextView
+                                android:id="@+id/textview_accountname_value"
+                                style="@style/CardView_Font.TransactionDetail"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingTop="5dp" />
+
+                            <TextView
+                                android:id="@+id/textview_bankcode_value"
+                                style="@style/CardView_Font.TransactionDetail"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingTop="5dp" />
+
+                        </LinearLayout>
+
+                    </FrameLayout>
 
                 </LinearLayout>
 
