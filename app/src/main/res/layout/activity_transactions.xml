@@ -1,15 +1,19 @@
 <!-- TODO: Add padding and other dimensions to dimens.xml -->
 <!-- TODO: Read design patterns for proper padding -->
 <!-- TODO: Reconsider static dimensions -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/linearlayout_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    android:orientation="vertical"
     android:background="@android:color/background_light">
 
+    <LinearLayout
+        android:id="@+id/linearlayout_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MainActivity"
+        android:orientation="vertical">
+    </LinearLayout>
 
+</ScrollView>
 
-</LinearLayout>
