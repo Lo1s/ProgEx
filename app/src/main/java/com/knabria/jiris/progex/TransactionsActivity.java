@@ -1,6 +1,10 @@
 package com.knabria.jiris.progex;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
@@ -25,7 +29,6 @@ public class TransactionsActivity extends AppCompatActivity {
     private final String URL_ALL_TRANSACTIONS = "http://demo0569565.mockable.io/transactions";
     private String selectedTab = MyConstants.FILTER_ALL;
 
-    //private LinearLayout llContainer;
     private ActionBar actionBar;
     private ProgressBar progressBar;
 
@@ -36,6 +39,23 @@ public class TransactionsActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+
+    private NetworkReceiver receiver;
+    private IntentFilter intentFilter;
+
+    // Notify if the user turned wifi on when the state was off during app runtime
+    // This way transaction list automatically refreshes if user selected "Yes" in the dialog
+    public class NetworkReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
+                if (isOnline()) {
+                    requestData(URL_ALL_TRANSACTIONS);
+                }
+            }
+        }
+    }
 
 
     @Override
@@ -54,6 +74,22 @@ public class TransactionsActivity extends AppCompatActivity {
         actionBar = getSupportActionBar();
         initializeTabs();
 
+        intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+        receiver = new NetworkReceiver();
+        registerReceiver(receiver, intentFilter);
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        registerReceiver(receiver, intentFilter);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(receiver);
     }
 
     private void initializeTabs() {
