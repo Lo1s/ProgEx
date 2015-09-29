@@ -1,6 +1,7 @@
 package com.knabria.jiris.progex;
 
-import android.support.v7.widget.CardView;
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,14 +19,15 @@ import java.util.List;
  */
 public class TransactionAdapter extends RecyclerView.Adapter<
         TransactionAdapter.TransactionViewHolder> {
-    private List<Transaction> mTransactionList;
+    private  List<Transaction> mTransactionList;
     private static final String TAG = "TransactionAdapter";
+    private String filter;
 
     public TransactionAdapter(List<Transaction> dataSet) {
         mTransactionList = dataSet;
     }
 
-    public static class TransactionViewHolder extends RecyclerView.ViewHolder {
+    public class TransactionViewHolder extends RecyclerView.ViewHolder {
 
         protected ImageView imageViewDirection;
         protected LinearLayout linearLayoutTextViews;
@@ -33,8 +35,13 @@ public class TransactionAdapter extends RecyclerView.Adapter<
         protected TextView textViewDirection;
         protected ImageButton imageButtonDetail;
 
+        private final Context context;
+
         public TransactionViewHolder(View v) {
             super(v);
+
+            context = v.getContext();
+
             imageViewDirection = (ImageView) v.findViewById(R.id.imageview_transaction_direction);
             linearLayoutTextViews =
                     (LinearLayout) v.findViewById(R.id.linearlayout_transaction_info);
@@ -45,7 +52,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<
     }
 
     @Override
-    public void onBindViewHolder(final TransactionViewHolder holder, int position) {
+    public void onBindViewHolder(final TransactionViewHolder holder, final int position) {
         // Replace contents of the view with element on this position
         Transaction transaction = mTransactionList.get(position);
 
@@ -60,12 +67,18 @@ public class TransactionAdapter extends RecyclerView.Adapter<
         }
         holder.textViewAmount.setText(transaction.getAmountInAccountCurrency()
                 + MyConstants.currency);
-        /*holder.imageButtonDetail.setOnClickListener(new View.OnClickListener() {
+
+        final Intent detailActivityIntent = new Intent(holder.context,
+                DetailTransactionActivity.class);
+        detailActivityIntent.putExtra(MyConstants.TRANSACTION_OBJECT,
+                mTransactionList.get(position));
+
+        holder.imageButtonDetail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //http://stackoverflow.com/questions/28767413/how-to-open-a-different-activity-on-recyclerview-item-onclick
+                holder.context.startActivity(detailActivityIntent);
             }
-        });*/
+        });
     }
 
     @Override
@@ -77,11 +90,8 @@ public class TransactionAdapter extends RecyclerView.Adapter<
         // Layout properties can be set here
         //...
 
-        // TODO: Check if casting is ok
-        TransactionViewHolder vh = new TransactionViewHolder((CardView)view);
-        return vh;
+       return new TransactionViewHolder(view);
     }
-
 
     // Returns size of the dataset
     @Override

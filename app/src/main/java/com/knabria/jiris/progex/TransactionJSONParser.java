@@ -1,5 +1,7 @@
 package com.knabria.jiris.progex;
 
+import android.content.Context;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,7 +15,7 @@ import java.util.List;
 public class TransactionJSONParser {
 
     // Returns list with parsed JSON data
-    public static List<Transaction> parseFeed(String content) {
+    public static List<Transaction> parseFeed(String content, String filter, Context context) {
 
         try {
             JSONObject jsonObject = new JSONObject(content);
@@ -33,7 +35,18 @@ public class TransactionJSONParser {
                     transaction.setDirection(jsonArray.getJSONObject(j)
                             .getString("direction"));
 
-                    transactionList.add(transaction);
+                    // Adding only necessary transactions (given by a filter = Tab)
+                    if (filter.equals(context.getResources().getString(R.string.all_transactions))) {
+                        transactionList.add(transaction);
+                    } else if (filter.equals(context.getResources().getString(
+                            R.string.incoming_transaction)) && transaction.getDirection().equals(
+                            MyConstants.FILTER_INCOMING)) {
+                        transactionList.add(transaction);
+                    } else if (filter.equals(context.getResources().getString(
+                            R.string.outgoing_transaction)) && transaction.getDirection().equals(
+                            MyConstants.FILTER_OUTGOING)) {
+                        transactionList.add(transaction);
+                    }
                 }
             }
 

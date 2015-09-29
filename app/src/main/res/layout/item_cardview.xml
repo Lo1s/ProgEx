@@ -8,7 +8,10 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     card_view:cardCornerRadius="5dp"
-    card_view:elevation="10dp">
+    card_view:elevation="10dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -53,14 +56,13 @@
         </LinearLayout>
 
         <ImageButton
-            android:id="@+id/imagebutton_deeper"
+            android:id="@+id/imagebutton_detail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginTop="6dp"
             android:background="@android:color/transparent"
-            android:onClick="startsDetailTransactionActivity"
             android:src="@drawable/ic_keyboard_arrow_right_black_36dp" />
 
     </RelativeLayout>

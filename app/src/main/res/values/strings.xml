@@ -10,5 +10,5 @@
     <string name="account_number">Account Number:</string>
     <string name="account_name">Account Name:</string>
     <string name="bank_code">Bank Code:</string>
-    <string name="all_transactions">All</string>
+    <string name="all_transactions">ALL</string>
 </resources>
