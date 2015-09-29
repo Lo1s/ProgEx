@@ -13,6 +13,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.internal.view.ContextThemeWrapper;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,18 +33,31 @@ public class TransactionsActivity extends AppCompatActivity {
     private final String URL_ALL_TRANSACTIONS = "http://demo0569565.mockable.io/transactions";
     private String selectedTab = MyConstants.FILTER_ALL;
 
-    private LinearLayout llContainer;
+    //private LinearLayout llContainer;
     private ActionBar actionBar;
 
     private FetchTransactionsTask fetchTransactionsTask;
     private List<Transaction> transactionList;
     private Transaction transaction;
 
+    // RecyclerView for better performance in case great amount of data would be loaded
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transactions);
-        llContainer = (LinearLayout) findViewById(R.id.linearlayout_container);
+        //llContainer = (LinearLayout) findViewById(R.id.linearlayout_container);
+        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        // TODO: Check the layout on different screen sizes
+        mRecyclerView.setHasFixedSize(true);
+
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
         actionBar = getSupportActionBar();
         initializeTabs();
 
@@ -55,9 +70,9 @@ public class TransactionsActivity extends AppCompatActivity {
         ActionBar.TabListener tabListener = new ActionBar.TabListener() {
             @Override
             public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-                if (llContainer.getChildCount() > 0) {
+                /*if (llContainer.getChildCount() > 0) {
                     llContainer.removeAllViews();
-                }
+                }*/
 
                 selectedTab = tab.getText().toString();
                 // Begin the REST transfer in the background thread via AsyncTask
@@ -85,7 +100,7 @@ public class TransactionsActivity extends AppCompatActivity {
     }
 
     /** Helper methods for creating UI which consists from CardViews */
-    private synchronized void createCardView(Transaction transaction) {
+    /*private synchronized void createCardView(Transaction transaction) {
         // For localization purposes get string from resources
         String directionFromResources =
                 (transaction.getDirection().equals(MyConstants.FILTER_INCOMING)) ?
@@ -103,7 +118,7 @@ public class TransactionsActivity extends AppCompatActivity {
                 ViewGroup.LayoutParams.WRAP_CONTENT);
 
         int margin = 10;
-        params.setMargins(margin, margin, margin, margin);
+        params.setMargins(margin, margin, margin, 10);
         cardView.setLayoutParams(params);
 
         cardInner.addView(createImageView(transaction.getDirection()));
@@ -184,7 +199,7 @@ public class TransactionsActivity extends AppCompatActivity {
         });
 
         return imageButtonDetail;
-    }
+    }*/
 
     // Checks for internet connectivity
     private boolean isOnline() {
@@ -257,25 +272,27 @@ public class TransactionsActivity extends AppCompatActivity {
             transactionList = TransactionJSONParser.parseFeed(s);
 
             if (transactionList != null) {
-                for (int i = 0; i < transactionList.size(); i++) {
+                mAdapter = new TransactionAdapter(transactionList);
+                mRecyclerView.setAdapter(mAdapter);
+                /*for (int i = 0; i < transactionList.size(); i++) {
                     transaction = transactionList.get(i);
                     if (selectedTab.equals(getResources().getString(R.string.all_transactions))) {
                         Log.i("id: " + transaction.getId(),
                                 "Amount: " + transaction.getAmountInAccountCurrency()
                                         + ", Direction: " + transaction.getDirection());
-                        createCardView(transaction);
+                            //createCardView(transaction);
 
                     } else if (selectedTab.equals(getResources()
                             .getString(R.string.incoming_transaction))
                             && transaction.getDirection().equals(MyConstants.FILTER_INCOMING)) {
-                        createCardView(transaction);
+                        //createCardView(transaction);
 
                     } else if (selectedTab.equals(getResources()
                             .getString(R.string.outgoing_transaction))
                             && transaction.getDirection().equals(MyConstants.FILTER_OUTGOING)) {
-                        createCardView(transaction);
+                        //createCardView(transaction);
                     }
-                }
+                }*/
             } else {
                 Log.i(TAG, "Transaction list is null");
             }
