@@ -57,4 +57,48 @@ public class TransactionJSONParser {
 
         return null;
     }
+
+    // Returns list with parsed JSON data
+    public static List<Transaction> parseFeed(JSONObject jsObject, String filter, Context context) {
+
+        try {
+            JSONObject jsonObject = jsObject;
+            List<Transaction> transactionList = new ArrayList<>();
+
+            JSONArray jsonArray = jsonObject.getJSONArray("items");
+
+            // In case more objects would exist
+            for (int i = 0; i < jsonObject.length(); i++) {
+                for (int j = 0; j < jsonArray.length(); j++) {
+                    Transaction transaction = new Transaction();
+
+                    transaction.setId(jsonArray.getJSONObject(j)
+                            .getInt("id"));
+                    transaction.setAmountInAccountCurrency(jsonArray.getJSONObject(j)
+                            .getInt("amountInAccountCurrency"));
+                    transaction.setDirection(jsonArray.getJSONObject(j)
+                            .getString("direction"));
+
+                    // Adding only necessary transactions (given by a filter = Tab)
+                    if (filter.equals(context.getResources().getString(R.string.all_transactions))) {
+                        transactionList.add(transaction);
+                    } else if (filter.equals(context.getResources().getString(
+                            R.string.incoming_transaction)) && transaction.getDirection().equals(
+                            MyConstants.FILTER_INCOMING)) {
+                        transactionList.add(transaction);
+                    } else if (filter.equals(context.getResources().getString(
+                            R.string.outgoing_transaction)) && transaction.getDirection().equals(
+                            MyConstants.FILTER_OUTGOING)) {
+                        transactionList.add(transaction);
+                    }
+                }
+            }
+
+            return transactionList;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
 }

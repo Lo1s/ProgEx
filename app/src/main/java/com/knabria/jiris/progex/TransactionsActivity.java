@@ -21,6 +21,15 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONObject;
+
 import java.util.List;
 
 public class TransactionsActivity extends AppCompatActivity {
@@ -51,12 +60,12 @@ public class TransactionsActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
                 if (isOnline()) {
-                    requestData(URL_ALL_TRANSACTIONS);
+                    requestDataVolley(URL_ALL_TRANSACTIONS);
+                    //requestDataHttpURLConn(URL_ALL_TRANSACTIONS);
                 }
             }
         }
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +101,16 @@ public class TransactionsActivity extends AppCompatActivity {
         unregisterReceiver(receiver);
     }
 
+    private void updateView(List<Transaction> list) {
+        if (list != null) {
+            mAdapter = new TransactionAdapter(list);
+            mRecyclerView.setAdapter(mAdapter);
+            progressBar.setVisibility(View.INVISIBLE);
+        } else {
+            Log.i(TAG, "Transaction list is null");
+        }
+    }
+
     private void initializeTabs() {
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.setTitle(getResources().getString(R.string.transaction_list));
@@ -104,8 +123,9 @@ public class TransactionsActivity extends AppCompatActivity {
                 // Begin the REST transfer in the background thread via AsyncTask
                 // for parallel processing use executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params)
                 // - not necessary in this example
-                requestData(URL_ALL_TRANSACTIONS);
 
+                requestDataVolley(URL_ALL_TRANSACTIONS);
+                //requestDataHttpURLConn(URL_ALL_TRANSACTIONS);
             }
 
             @Override
@@ -126,7 +146,7 @@ public class TransactionsActivity extends AppCompatActivity {
     }
 
     // Checks for internet connectivity
-    private boolean isOnline() {
+    public boolean isOnline() {
         ConnectivityManager connectMgr =
                 (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = connectMgr.getActiveNetworkInfo();
@@ -137,7 +157,51 @@ public class TransactionsActivity extends AppCompatActivity {
         }
     }
 
-    private void requestData(String uri) {
+    /** 3 methods for requesting data provided (Retrofit used as default)
+     * Retrofit for the best results in benchmarks and ability to transfer content into POJO's
+     * Volley for simplicity and caching ability
+     * HttpURLConnection as native implementation w/o external libraries */
+    private void requestDataVolley(String uri) {
+        Log.i("requestDataVolley", "Called in " + getLocalClassName());
+        if (isOnline()) {
+            Log.i(TAG, "Fetching data from " + uri);
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                    Request.Method.GET, uri, null,
+
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject jsonObject) {
+                            transactionList = TransactionJSONParser.parseFeed(jsonObject,
+                                    selectedTab, TransactionsActivity.this);
+                            updateView(transactionList);
+                        }
+                    },
+
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError volleyError) {
+                            // Debug info
+                            volleyError.printStackTrace();
+                            // Inform user
+                            Toast.makeText(TransactionsActivity.this, "Data download failed",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+            );
+
+            RequestQueue requestQueue = Volley.newRequestQueue(this);
+            requestQueue.add(jsonObjectRequest);
+
+        } else {
+            // TODO: Consider making shortcut for enabling Wi-Fi
+            Toast.makeText(TransactionsActivity.this, "Device not connected",
+                    Toast.LENGTH_SHORT).show();
+            askUserToTurnWifiOn();
+        }
+    }
+
+    private void requestDataHttpURLConn(String uri) {
+        Log.i("requestDataHttpURLConn", "Called in " + getLocalClassName());
         if (isOnline()) {
             fetchTransactionsTask = new FetchTransactionsTask();
             fetchTransactionsTask.execute(uri);
@@ -192,17 +256,11 @@ public class TransactionsActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String s) {
-            Log.i(TAG, "Result: " + s + "\n");
+            //Log.i(TAG, "Result: " + s + "\n");
             transactionList = TransactionJSONParser.parseFeed(s, selectedTab,
-                    TransactionsActivity.this);
+                   TransactionsActivity.this);
 
-            if (transactionList != null) {
-                mAdapter = new TransactionAdapter(transactionList);
-                mRecyclerView.setAdapter(mAdapter);
-                progressBar.setVisibility(View.INVISIBLE);
-            } else {
-                Log.i(TAG, "Transaction list is null");
-            }
+            updateView(transactionList);
         }
     }
 

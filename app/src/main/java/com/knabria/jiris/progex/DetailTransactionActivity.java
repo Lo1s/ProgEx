@@ -11,6 +11,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONObject;
+
 public class DetailTransactionActivity extends AppCompatActivity {
 
     private static final String TAG = "DetailTransaction";
@@ -37,7 +46,9 @@ public class DetailTransactionActivity extends AppCompatActivity {
         // for contra account values
         transaction = getIntent().getParcelableExtra(MyConstants.TRANSACTION_OBJECT);
         transactionId = transaction.getId();
-        requestData(URL_TRANSACTION_DETAIL + transactionId);
+
+        requestDataVolley(URL_TRANSACTION_DETAIL + transactionId);
+        //requestDataHttpURLConn(URL_TRANSACTION_DETAIL + transactionId);
         updateHeader();
     }
 
@@ -81,8 +92,42 @@ public class DetailTransactionActivity extends AppCompatActivity {
         }
     }
 
+    /** 3 methods for requesting data provided (Retrofit used as default)
+     * Retrofit for the best results in benchmarks and ability to transfer content into POJO's
+     * Volley for simplicity and caching ability
+     * HttpURLConnection as native implementation w/o external libraries */
+    private void requestDataVolley(String uri) {
+        Log.i("requestDataVolley", "Called in " + getLocalClassName());
+        Log.i(TAG, "Fetching data from " + uri);
+        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.GET, uri, null,
 
-    private void requestData(String uri) {
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject object) {
+                        contraAccount = ContraAccountJSONParser.parseFeed(object);
+                        updateDetailView();
+                    }
+                },
+
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        // Debug info
+                        volleyError.printStackTrace();
+                        // Inform user
+                        Toast.makeText(DetailTransactionActivity.this, "Data download failed",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(jsonObjectRequest);
+    }
+
+
+    private void requestDataHttpURLConn(String uri) {
+        Log.i("requestDataHttpURLConn", "Called in " + getLocalClassName());
         FetchTransacTionDetailTask fetchTransacTionDetailTask
                 = new FetchTransacTionDetailTask();
         fetchTransacTionDetailTask.execute(uri);
@@ -122,6 +167,7 @@ public class DetailTransactionActivity extends AppCompatActivity {
                         Toast.LENGTH_SHORT).show();
                 progressBar.setVisibility(View.INVISIBLE);
 
+                // :)
                 if (transaction.getId() == 4) {
                     Toast.makeText(DetailTransactionActivity.this, "Try again ;)",
                             Toast.LENGTH_SHORT).show();
