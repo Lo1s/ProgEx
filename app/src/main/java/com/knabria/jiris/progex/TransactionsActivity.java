@@ -55,7 +55,7 @@ public class TransactionsActivity extends AppCompatActivity {
     private NetworkReceiver receiver;
     private IntentFilter intentFilter;
 
-    // Notify if the user turned wifi on when the state was off during app runtime
+    // Notify if the user turned wifi on when the state was off during the app runtime
     // This way transaction list automatically refreshes if user selected "Yes" in the dialog
     public class NetworkReceiver extends BroadcastReceiver {
 
@@ -73,11 +73,11 @@ public class TransactionsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Setting up UI
         setContentView(R.layout.activity_transactions);
         progressBar = (ProgressBar) findViewById(R.id.progressBarTransactions);
         progressBar.setVisibility(View.VISIBLE);
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        // TODO: Check the layout on different screen sizes
         mRecyclerView.setHasFixedSize(true);
 
         mLayoutManager = new LinearLayoutManager(this);
@@ -86,6 +86,7 @@ public class TransactionsActivity extends AppCompatActivity {
         actionBar = getSupportActionBar();
         initializeTabs();
 
+        // Register receiver for WiFi status
         intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
         receiver = new NetworkReceiver();
         registerReceiver(receiver, intentFilter);
@@ -149,10 +150,9 @@ public class TransactionsActivity extends AppCompatActivity {
             public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
                 progressBar.setVisibility(View.VISIBLE);
                 selectedTab = tab.getText().toString();
-                // Begin the REST transfer in the background thread via AsyncTask
-                // for parallel processing use executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params)
-                // - not necessary in this example
-
+                // Start the REST transfer in the background thread via AsyncTask
+                // for parallel processing executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params)
+                // can be used - not necessary in this example
                 requestDataVolley(URL_ALL_TRANSACTIONS);
                 //requestDataHttpURLConn(URL_ALL_TRANSACTIONS);
             }
@@ -186,7 +186,7 @@ public class TransactionsActivity extends AppCompatActivity {
         }
     }
 
-    /** 2 methods for requesting data provided (Volley used as default)
+    /** 2 methods for requesting data are implemented (Volley used as default)
      * Volley for simplicity and caching ability
      * HttpURLConnection as native implementation w/o external libraries */
     private void requestDataVolley(String uri) {
@@ -221,7 +221,6 @@ public class TransactionsActivity extends AppCompatActivity {
             requestQueue.add(jsonObjectRequest);
 
         } else {
-            // TODO: Consider making shortcut for enabling Wi-Fi
             Toast.makeText(TransactionsActivity.this, "Device not connected",
                     Toast.LENGTH_SHORT).show();
             askUserToTurnWifiOn();
@@ -234,7 +233,6 @@ public class TransactionsActivity extends AppCompatActivity {
             fetchTransactionsTask = new FetchTransactionsTask();
             fetchTransactionsTask.execute(uri);
         } else {
-            // TODO: Consider making shortcut for enabling Wi-Fi
             Toast.makeText(TransactionsActivity.this, "Device not connected",
                     Toast.LENGTH_SHORT).show();
             askUserToTurnWifiOn();
@@ -291,7 +289,4 @@ public class TransactionsActivity extends AppCompatActivity {
             updateView(transactionList);
         }
     }
-
-    // TODO: Change it to fragments for better UI on tablet
-
 }

@@ -8,6 +8,7 @@ import org.json.JSONObject;
  */
 public class ContraAccountJSONParser {
 
+    // Parses data from JSON to POJO
     public static ContraAccount parseFeed(String content) {
 
         try {
@@ -43,7 +44,6 @@ public class ContraAccountJSONParser {
                     .getString("accountName"));
             contraAccount.setBankCode(jsonObject.getJSONObject("contraAccount")
                     .getInt("bankCode"));
-
 
             return contraAccount;
 

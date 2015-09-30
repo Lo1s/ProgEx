@@ -1,7 +1,6 @@
-<!-- TODO: Add padding and other dimensions to dimens.xml -->
-<!-- TODO: Read design patterns for proper padding -->
-<!-- TODO: Reconsider static dimensions -->
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/transaction_card_view"
     android:layout_width="match_parent"
@@ -19,7 +18,6 @@
         android:background="@android:color/holo_green_light"
         android:padding="16dp">
 
-        <!-- TODO: Fix the hardcoded icon -->
         <ImageView
             android:id="@+id/imageview_transaction_direction"
             android:layout_width="wrap_content"
@@ -35,23 +33,19 @@
             android:layout_toRightOf="@id/imageview_transaction_direction"
             android:orientation="vertical">
 
-            <!-- TODO: Fix the hardcoded amount -->
             <TextView
                 android:id="@+id/textview_amount"
                 style="@style/CardView_Font.TitleAmount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:text="1337 Kč" />
+                android:layout_marginTop="3dp" />
 
-            <!-- TODO: Fix the hardcoded amount -->
             <TextView
                 android:id="@+id/textview_direction"
                 style="@style/CardView_Font.TransactionType"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/textview_amount"
-                android:text="Outgoing" />
+                android:layout_below="@id/textview_amount" />
 
         </LinearLayout>
 

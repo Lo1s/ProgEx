@@ -6,7 +6,6 @@
     </style>
 
     <!-- CardView font style -->
-    <!-- TODO: Check the API diff for fontFamily -->
     <style name="CardView_Font" parent="TextAppearance.AppCompat.Medium">
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textColor">@android:color/black</item>

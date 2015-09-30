@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class TransactionJSONParser {
 
-    // Returns list with parsed JSON data
+    // Parses data from JSON to the list of transactions
     public static List<Transaction> parseFeed(String content, String filter, Context context) {
 
         try {
@@ -35,7 +35,7 @@ public class TransactionJSONParser {
                     transaction.setDirection(jsonArray.getJSONObject(j)
                             .getString("direction"));
 
-                    // Adding only necessary transactions (given by a filter = Tab)
+                    // Adding only necessary transactions (given by the filter = Tab)
                     if (filter.equals(context.getResources().getString(R.string.all_transactions))) {
                         transactionList.add(transaction);
                     } else if (filter.equals(context.getResources().getString(

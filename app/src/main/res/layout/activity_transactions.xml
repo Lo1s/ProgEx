@@ -1,6 +1,3 @@
-<!-- TODO: Add padding and other dimensions to dimens.xml -->
-<!-- TODO: Read design patterns for proper padding -->
-<!-- TODO: Reconsider static dimensions -->
 
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"

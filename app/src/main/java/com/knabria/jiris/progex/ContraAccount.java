@@ -3,6 +3,8 @@ package com.knabria.jiris.progex;
 /**
  * Created by jiris on 27.09.2015.
  */
+
+// POJO for ContraAccount object from the JSON
 public class ContraAccount {
 
     private int accountNumber;

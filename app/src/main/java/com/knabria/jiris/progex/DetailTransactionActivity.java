@@ -34,6 +34,7 @@ public class DetailTransactionActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Setting up UI
         setContentView(R.layout.activity_detail_transaction);
         progressBar = (ProgressBar) findViewById(R.id.progressBarDetail);
         progressBar.setVisibility(View.VISIBLE);
@@ -41,9 +42,8 @@ public class DetailTransactionActivity extends AppCompatActivity {
         actionBar = getSupportActionBar();
         actionBar.setTitle(getResources().getString(R.string.transaction_detail));
 
-
         // Get the passed object (Transaction), update the header data from it and send the request
-        // for contra account values
+        // for ContraAccount values
         transaction = getIntent().getParcelableExtra(MyConstants.TRANSACTION_OBJECT);
         transactionId = transaction.getId();
 
@@ -76,7 +76,7 @@ public class DetailTransactionActivity extends AppCompatActivity {
         }
     }
 
-    // Sets up the UI from contra account values
+    // Sets up the UI from ContraAccount values
     private void updateDetailView() {
         if (contraAccount != null) {
             TextView textViewAccNumber = (TextView) findViewById(R.id.textview_accountnumber_value);
@@ -92,7 +92,7 @@ public class DetailTransactionActivity extends AppCompatActivity {
         }
     }
 
-    /** 2 methods for requesting data provided (Volley used as default)
+    /** 2 methods for requesting data are implemented (Volley used as default)
      * Volley for simplicity and caching ability
      * HttpURLConnection as native implementation w/o external libraries */
     private void requestDataVolley(String uri) {

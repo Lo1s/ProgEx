@@ -6,6 +6,8 @@ import android.os.Parcelable;
 /**
  * Created by jiris on 27.09.2015.
  */
+
+// POJO for Transaction object from the JSON
 public class Transaction implements Parcelable {
 
     private int id;

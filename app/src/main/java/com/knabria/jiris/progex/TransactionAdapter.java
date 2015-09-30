@@ -93,7 +93,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<
        return new TransactionViewHolder(view);
     }
 
-    // Returns size of the dataset
+    // Returns size of the data set
     @Override
     public int getItemCount() {
         return mTransactionList.size();
