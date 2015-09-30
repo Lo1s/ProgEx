@@ -17,6 +17,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -101,6 +104,32 @@ public class TransactionsActivity extends AppCompatActivity {
         unregisterReceiver(receiver);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate menu
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_transactions, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on action icons
+        switch (item.getItemId()) {
+            case R.id.action_refresh:
+                refresh();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    // Downloads data on user demand
+    private void refresh() {
+        progressBar.setVisibility(View.VISIBLE);
+        requestDataVolley(URL_ALL_TRANSACTIONS);
+    }
+
     private void updateView(List<Transaction> list) {
         if (list != null) {
             mAdapter = new TransactionAdapter(list);
@@ -157,8 +186,7 @@ public class TransactionsActivity extends AppCompatActivity {
         }
     }
 
-    /** 3 methods for requesting data provided (Retrofit used as default)
-     * Retrofit for the best results in benchmarks and ability to transfer content into POJO's
+    /** 2 methods for requesting data provided (Volley used as default)
      * Volley for simplicity and caching ability
      * HttpURLConnection as native implementation w/o external libraries */
     private void requestDataVolley(String uri) {

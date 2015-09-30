@@ -11,4 +11,5 @@
     <string name="account_name">Account Name:</string>
     <string name="bank_code">Bank Code:</string>
     <string name="all_transactions">ALL</string>
+    <string name="action_refresh">Refresh</string>
 </resources>

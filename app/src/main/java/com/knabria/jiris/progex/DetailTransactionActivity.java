@@ -92,8 +92,7 @@ public class DetailTransactionActivity extends AppCompatActivity {
         }
     }
 
-    /** 3 methods for requesting data provided (Retrofit used as default)
-     * Retrofit for the best results in benchmarks and ability to transfer content into POJO's
+    /** 2 methods for requesting data provided (Volley used as default)
      * Volley for simplicity and caching ability
      * HttpURLConnection as native implementation w/o external libraries */
     private void requestDataVolley(String uri) {
